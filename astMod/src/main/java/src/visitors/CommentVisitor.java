@@ -77,6 +77,7 @@ public class CommentVisitor extends ASTVisitor {
 
     private final Set<SimpleName> names = new HashSet<>();
 
+    @SuppressWarnings("unchecked")
     @Override
     public void preVisit(ASTNode node) {
         if (node instanceof TypeDeclaration) {

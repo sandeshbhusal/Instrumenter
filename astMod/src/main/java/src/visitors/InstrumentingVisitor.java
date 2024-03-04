@@ -90,6 +90,7 @@ public class InstrumentingVisitor extends ASTVisitor {
         }
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public void endVisit(IfStatement node) {
         // Add a "Print" invocation before the variable, print its value.

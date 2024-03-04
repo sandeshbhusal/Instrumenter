@@ -18,6 +18,7 @@ import org.eclipse.jface.text.Document;
 import org.eclipse.text.edits.TextEdit;
 import org.slf4j.*;
 
+import src.scripts.EvoRunner;
 import src.visitors.InstanceVariableVisitor;
 import src.visitors.InstrumentingVisitor;
 
@@ -160,6 +161,8 @@ public class App {
                 }
             }
 
+            Collection<File> classFiles = FileUtils.listFiles(compileDir, new String[] {"class"}, true);
+
             // At this point, the compileDir contains all the compiled classfiles.
             // Run Evosuite on the compiled classfiles.
             // Evosuite SHOULD NOT run on the collectorInstrumented Files because they may
@@ -167,6 +170,9 @@ public class App {
             // additional overhead to the entire search process in Evosuite.
 
             // Run evosuite and generate testcases here.
+            for (File classFile: classFiles) {
+                EvoRunner.runEvosuite(classFile, compileDir);
+            }
 
             // Run evosuite-generated testcases on the branchInstrumented source code.
 
@@ -179,6 +185,14 @@ public class App {
 
         logger.info("Finished visiting files.");
         return;
+    }
+
+    private static String replaceSuffix(String input, String oldSuffix, String newSuffix) {
+        if (!input.endsWith(oldSuffix))
+            return input;
+        int sufflen = oldSuffix.length();
+        String substr = input.substring(0, input.length() - sufflen);
+        return substr + newSuffix;
     }
 }
 

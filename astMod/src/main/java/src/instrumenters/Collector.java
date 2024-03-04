@@ -1,8 +1,7 @@
 package src.instrumenters;
 
-public class Collector extends Thread {
+public class Collector {
 
-    public void run() {
-
+    public static void main(String[] args) {
     }
 }

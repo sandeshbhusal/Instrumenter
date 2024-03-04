@@ -3,6 +3,7 @@ clean:
     # Assuming that resources folder is used.
     rm -rf ../Instrumented
     rm -rf /tmp/compiled*
+    mvn clean
 
 build:
     mvn clean package -DskipTests=true -Dmaven.skip.test

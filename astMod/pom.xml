@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <!-- xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+  http://maven.apache.org/xsd/maven-4.0.0.xsd"> -->
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>src</groupId>
@@ -44,6 +45,11 @@
       <version>1.7.5</version>
     </dependency>
     <dependency>
+      <groupId>ch.qos.logback</groupId>
+      <artifactId>logback-classic</artifactId>
+      <version>1.5.3</version>
+    </dependency>
+    <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-simple</artifactId>
       <version>1.7.5</version>
@@ -52,6 +58,14 @@
       <groupId>javax</groupId>
       <artifactId>javaee-api</artifactId>
       <version>8.0.1</version>
+    </dependency>
+
+    <!-- NOTE: This is not in the maven repo. For this, grab the release from
+    github, and manually paste it into the .m2 directory in your system -->
+    <dependency>
+      <groupId>org.evosuite</groupId>
+      <artifactId>evosuite</artifactId>
+      <version>1.2.0</version>
     </dependency>
   </dependencies>
 
