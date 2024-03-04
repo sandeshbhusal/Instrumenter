@@ -1,0 +1,8 @@
+{
+    "java.project.referencedLibraries": [
+        "lib/**/*.jar",
+        "org.eclipse.equinox.common-3.14.0.jar",
+        "org.eclipse.jdt.core-3.14.0.jar"
+    ],
+    "java.configuration.updateBuildConfiguration": "automatic"
+}

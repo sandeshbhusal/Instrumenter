@@ -1,0 +1,16 @@
+src/visitors/InstrumentingVisitor.class
+src/visitors/InstanceVariableVisitor$VariableDeclaration.class
+src/App.class
+src/visitors/InstrumentingVisitor$ClassAttributes.class
+src/visitors/CommentVisitor$IfMap.class
+src/App$1.class
+src/visitors/CommentVisitor.class
+src/visitors/InstrumentingVisitor$MethodAttributes.class
+src/visitors/CommentVisitor$1.class
+src/visitors/InstrumentingVisitor$IfAttributes.class
+src/visitors/CommentVisitor$ClassMap.class
+src/visitors/CommentVisitor$NameCollector.class
+src/CollectorInstrumentationConsumer.class
+src/visitors/NameCollector.class
+src/visitors/CommentVisitor$MethodMap.class
+src/visitors/InstanceVariableVisitor.class

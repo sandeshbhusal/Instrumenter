@@ -1,0 +1,11 @@
+# Clean recipe
+clean:
+    # Assuming that resources folder is used.
+    rm -rf ../Instrumented
+    rm -rf /tmp/compiled*
+
+build:
+    mvn clean package -DskipTests=true -Dmaven.skip.test
+
+run:
+    java -jar ./target/astMod-1.0-SNAPSHOT.jar ../resources/
