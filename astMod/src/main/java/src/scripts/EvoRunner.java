@@ -22,7 +22,7 @@ public class EvoRunner {
                 "-Dcriterion=BRANCH",
                 String.format("-projectCP=%s", parentDir.toString()),
                 String.format("-class=%s", classFile.getName()),
-                String.format("-Doutput_dir='%s'", generatedTestDir.toString())
+                String.format("-DOUTPUT_DIR='%s'", generatedTestDir.toString())
         };
 
         EvoSuite.main(arguments);

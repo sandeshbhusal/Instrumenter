@@ -18,6 +18,7 @@ import org.eclipse.jface.text.Document;
 import org.eclipse.text.edits.TextEdit;
 import org.slf4j.*;
 
+import ch.qos.logback.classic.LoggerContext;
 import src.scripts.EvoRunner;
 import src.visitors.InstanceVariableVisitor;
 import src.visitors.InstrumentingVisitor;
@@ -121,22 +122,23 @@ public class App {
 
             logger.info("Round " + loopCount + " compiling to " + compileDir.toString());
 
-            // Compile all files in the if-instrumented dir to the compilation dir.
-            JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
-
             // Run the compilation here.
             for (File file : filesToBeCompiled) {
-                int compilationResult = compiler.run(null, null, null, file.getPath(), "-d", compileDir.getPath());
-                if (compilationResult != 0) {
-                    logger.error("Compilation failed for file " + file.toString());
-                } else {
-                    logger.debug("Compiled " + file.toString());
+                ArrayList<String> argsToJavac = new ArrayList<>();
+                argsToJavac.add("bash");
+                argsToJavac.add("/home/sandesh/Workspace/thesis/PoCs/AST/astMod/src/main/java/src/scripts");
+
+                try {
+                    new ProcessBuilder(argsToJavac).start().wait();
+
+                } catch (InterruptedException | IOException e) {
+                    logger.error("Compilation of file", file.toString(), "failed with exception", e.toString());
                 }
 
                 String contents;
                 try {
                     contents = new String(FileUtils.readFileToByteArray(file));
-                    ASTParser parser = ASTParser.newParser(AST.getJLSLatest());
+                    ASTParser parser = ASTParser.newParser(AST.JLS8);
                     parser.setSource(contents.toCharArray());
 
                     CompilationUnit unit = (CompilationUnit) parser.createAST(null);
@@ -171,7 +173,10 @@ public class App {
 
             // Run evosuite and generate testcases here.
             for (File classFile: classFiles) {
-                EvoRunner.runEvosuite(classFile, compileDir);
+                String absName = classFile.getAbsolutePath().toString();
+                String onlyFileName = absName.substring(0, absName.length() - ".class".length());
+
+                EvoRunner.runEvosuite(Paths.get(onlyFileName).toFile(), compileDir);
             }
 
             // Run evosuite-generated testcases on the branchInstrumented source code.
@@ -185,14 +190,6 @@ public class App {
 
         logger.info("Finished visiting files.");
         return;
-    }
-
-    private static String replaceSuffix(String input, String oldSuffix, String newSuffix) {
-        if (!input.endsWith(oldSuffix))
-            return input;
-        int sufflen = oldSuffix.length();
-        String substr = input.substring(0, input.length() - sufflen);
-        return substr + newSuffix;
     }
 }
 

@@ -40,21 +40,6 @@
     </dependency>
 
     <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>slf4j-api</artifactId>
-      <version>1.7.5</version>
-    </dependency>
-    <dependency>
-      <groupId>ch.qos.logback</groupId>
-      <artifactId>logback-classic</artifactId>
-      <version>1.5.3</version>
-    </dependency>
-    <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>slf4j-simple</artifactId>
-      <version>1.7.5</version>
-    </dependency>
-    <dependency>
       <groupId>javax</groupId>
       <artifactId>javaee-api</artifactId>
       <version>8.0.1</version>
@@ -62,6 +47,8 @@
 
     <!-- NOTE: This is not in the maven repo. For this, grab the release from
     github, and manually paste it into the .m2 directory in your system -->
+    <!-- No logging dependencies are used (we reuse what evosuite brings) 
+    - slf4j and logback are packaged in the evosuite uberJar. -->
     <dependency>
       <groupId>org.evosuite</groupId>
       <artifactId>evosuite</artifactId>
