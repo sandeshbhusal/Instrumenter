@@ -1,7 +1,8 @@
-/home/sandesh/Workspace/thesis/PoCs/AST/astMod/src/main/java/src/visitors/InstanceVariableVisitor.java
-/home/sandesh/Workspace/thesis/PoCs/AST/astMod/src/main/java/src/App.java
-/home/sandesh/Workspace/thesis/PoCs/AST/astMod/src/main/java/src/scripts/EvoRunner.java
-/home/sandesh/Workspace/thesis/PoCs/AST/astMod/src/main/java/src/visitors/InstrumentingVisitor.java
-/home/sandesh/Workspace/thesis/PoCs/AST/astMod/src/main/java/src/instrumenters/Collector.java
-/home/sandesh/Workspace/thesis/PoCs/AST/astMod/src/main/java/src/visitors/CommentVisitor.java
-/home/sandesh/Workspace/thesis/PoCs/AST/astMod/src/main/java/src/instrumenters/BranchModifier.java
+/home/sandesh/Workspace/thesis/PoCs/InstrumentedEvo/ASTModifier/astMod/src/main/java/src/interfaces/Runner.java
+/home/sandesh/Workspace/thesis/PoCs/InstrumentedEvo/ASTModifier/astMod/src/main/java/src/instrumenters/BranchModifier.java
+/home/sandesh/Workspace/thesis/PoCs/InstrumentedEvo/ASTModifier/astMod/src/main/java/src/visitors/InstrumentingVisitor.java
+/home/sandesh/Workspace/thesis/PoCs/InstrumentedEvo/ASTModifier/astMod/src/main/java/src/AppServer.java
+/home/sandesh/Workspace/thesis/PoCs/InstrumentedEvo/ASTModifier/astMod/src/main/java/src/interfaces/Master.java
+/home/sandesh/Workspace/thesis/PoCs/InstrumentedEvo/ASTModifier/astMod/src/main/java/src/visitors/InstanceVariableVisitor.java
+/home/sandesh/Workspace/thesis/PoCs/InstrumentedEvo/ASTModifier/astMod/src/main/java/src/visitors/CommentVisitor.java
+/home/sandesh/Workspace/thesis/PoCs/InstrumentedEvo/ASTModifier/astMod/src/main/java/src/App.java

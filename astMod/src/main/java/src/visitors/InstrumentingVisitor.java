@@ -151,22 +151,6 @@ public class InstrumentingVisitor extends ASTVisitor {
     }
 }
 
-// TODO: Use this to generate all the variables
-// Maybe this is an overkill for now.
-// class ExpressionVisitor1 extends ASTVisitor {
-// public static int depth = 0;
-
-// public static class ExpressionInfo {
-// Expression expression;
-// public HashSet<String> identifiers = new HashSet<>();
-// }
-
-// // @Override
-// // public boolean visit(ExpressionStatement exp) {
-
-// // }
-// }
-
 class NameCollector extends ASTVisitor {
     public HashSet<String> identifiers = new HashSet<>();
 
