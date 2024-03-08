@@ -12,7 +12,6 @@ src/visitors/CommentVisitor$1.class
 src/visitors/InstrumentingVisitor$IfAttributes.class
 src/visitors/CommentVisitor$ClassMap.class
 src/visitors/CommentVisitor$NameCollector.class
-src/CollectorInstrumentationConsumer.class
 src/visitors/NameCollector.class
 src/AppServer.class
 src/visitors/CommentVisitor$MethodMap.class

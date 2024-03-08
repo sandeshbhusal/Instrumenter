@@ -2,6 +2,7 @@ package src.visitors;
 
 import java.util.HashSet;
 
+import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.ASTVisitor;
 import org.eclipse.jdt.core.dom.Block;
@@ -10,7 +11,9 @@ import org.eclipse.jdt.core.dom.ExpressionStatement;
 import org.eclipse.jdt.core.dom.IfStatement;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.MethodInvocation;
+import org.eclipse.jdt.core.dom.NumberLiteral;
 import org.eclipse.jdt.core.dom.SimpleName;
+import org.eclipse.jdt.core.dom.StringLiteral;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 import org.eclipse.jdt.core.dom.VariableDeclarationFragment;
 import org.eclipse.jdt.core.dom.rewrite.ASTRewrite;
@@ -86,6 +89,7 @@ public class InstrumentingVisitor extends ASTVisitor {
 
         if (node instanceof IfStatement) {
             this.currentIfAttributes = new IfAttributes(this.currentMethodAttributes);
+            this.currentIfAttributes.id = this.currentMethodAttributes.ifStatements.size();
             this.currentMethodAttributes.ifStatements.add(currentIfAttributes);
         }
     }
@@ -93,13 +97,31 @@ public class InstrumentingVisitor extends ASTVisitor {
     @SuppressWarnings("unchecked")
     @Override
     public void endVisit(IfStatement node) {
-        // Add a "Print" invocation before the variable, print its value.
-        MethodInvocation invocation = this.rewriter.getAST().newMethodInvocation();
+        AST ast = this.rewriter.getAST();
 
-        invocation.setExpression(this.rewriter.getAST().newName("Recorder"));
-        invocation.setName(this.rewriter.getAST().newSimpleName("instrument"));
+        MethodInvocation invocation = ast.newMethodInvocation();
+
+        invocation.setExpression(ast.newName("Reporter"));
+        invocation.setName(ast.newSimpleName("report"));
+        
+        // Add classname, methodname and branch ID.
+        StringLiteral lit = ast.newStringLiteral();
+        lit.setLiteralValue(currentClassName);
+        invocation.arguments().add(lit);
+        
+        StringLiteral m = ast.newStringLiteral();
+        m.setLiteralValue(currentMethodName);
+        invocation.arguments().add(m);
+
+        StringLiteral expression = ast.newStringLiteral();
+        expression.setLiteralValue(node.getExpression().toString());
+        invocation.arguments().add(expression);
 
         for (String variable : currentIfAttributes.instanceVariables) {
+            StringLiteral varName = ast.newStringLiteral();
+            varName.setLiteralValue(variable);
+            invocation.arguments().add(varName);
+
             SimpleName arg = this.rewriter.getAST().newSimpleName(variable);
             invocation.arguments().add(arg);
         }

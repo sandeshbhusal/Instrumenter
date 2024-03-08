@@ -1,7 +1,6 @@
 package src;
 
 import java.util.Collection;
-import java.util.function.Consumer;
 import java.util.ArrayList;
 
 import org.apache.commons.io.FileUtils;
@@ -45,11 +44,13 @@ public class App {
         File parentPath = scanDir.getParentFile();
         setupPaths(parentPath);
         copyFilesToBranchInsDir(scanDir);
+        addReportingCode(ifInstrumented);
 
         // Start the RMI server.
         try {
-            AppServer rmiServer = new AppServer();
-            Registry rmiRegistry = LocateRegistry.getRegistry();
+            AppServer rmiServer = new AppServer(Instrumented, ifInstrumented, collectorInstrumented);
+            LocateRegistry.createRegistry(1111);
+            Registry rmiRegistry = LocateRegistry.getRegistry(1111);
 
             rmiRegistry.rebind("master", rmiServer);
             logger.info("Started RMI server at port: " + Registry.REGISTRY_PORT);
@@ -58,6 +59,49 @@ public class App {
             logger.error("Could not start a RMI server on master node.");
             logger.error(e.toString());
             return;
+        }
+    }
+
+    private static void addReportingCode(Path sourcePath) {
+        Collection<File> sources = FileUtils.listFiles(sourcePath.toFile(), new String[] { "java" }, true);
+        for (File source : sources) {
+            try {
+                String contents = new String(FileUtils.readFileToByteArray(source));
+
+                @SuppressWarnings("deprecation") // AST.JLS(K), where K < current JDK version is always
+                                                 // deprecated.
+                ASTParser parser = ASTParser.newParser(AST.JLS8);
+
+                parser.setSource(contents.toCharArray());
+                parser.setKind(ASTParser.K_COMPILATION_UNIT);
+
+                CompilationUnit unit = (CompilationUnit) parser.createAST(null);
+                AST ast = unit.getAST();
+
+                ASTRewrite rewrite = ASTRewrite.create(ast);
+                InstrumentingVisitor instrumenter = new InstrumentingVisitor(rewrite);
+
+                unit.accept(instrumenter);
+
+                Document document = new Document();
+                document.set(contents);
+
+                ImportDeclaration importDeclaration = ast.newImportDeclaration();
+                importDeclaration.setName(ast.newName("src.Reporter"));
+
+                ListRewrite listRewrite = rewrite.getListRewrite(unit, CompilationUnit.IMPORTS_PROPERTY);
+                listRewrite.insertLast(importDeclaration, null);
+
+                TextEdit edits = rewrite.rewriteAST(document, null);
+                edits.apply(document);
+
+                BufferedWriter writer = new BufferedWriter(new FileWriter(source.getAbsolutePath()));
+                writer.write(document.get());
+                writer.close();
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -114,59 +158,5 @@ public class App {
         }
 
         return rval;
-    }
-}
-
-class CollectorInstrumentationConsumer implements Consumer<File> {
-    final static Logger logger = LoggerFactory.getLogger(CollectorInstrumentationConsumer.class.getName());
-
-    @Override
-    public void accept(File inputFile) {
-        if (inputFile.getAbsolutePath().endsWith(".java")) {
-            logger.info("Working on " + inputFile.toString());
-
-            try {
-                String contents = new String(FileUtils.readFileToByteArray(inputFile));
-
-                @SuppressWarnings("deprecation") // AST.JLS(K), where K < current JDK version is always
-                                                 // deprecated.
-                ASTParser parser = ASTParser.newParser(AST.JLS8);
-
-                parser.setSource(contents.toCharArray());
-                parser.setKind(ASTParser.K_COMPILATION_UNIT);
-
-                CompilationUnit unit = (CompilationUnit) parser.createAST(null);
-                AST ast = unit.getAST();
-
-                ASTRewrite rewrite = ASTRewrite.create(ast);
-                InstrumentingVisitor instrumenter = new InstrumentingVisitor(rewrite);
-
-                unit.accept(instrumenter);
-
-                Document document = new Document();
-                document.set(contents);
-
-                ImportDeclaration importDeclaration = ast.newImportDeclaration();
-                importDeclaration.setName(ast.newName("Instrumenter.Recorder"));
-
-                // Get the list of existing import declarations
-                ListRewrite listRewrite = rewrite.getListRewrite(unit, CompilationUnit.IMPORTS_PROPERTY);
-                listRewrite.insertLast(importDeclaration, null);
-
-                TextEdit edits = rewrite.rewriteAST(document, null);
-                edits.apply(document);
-
-                // Dump the document to a different file.
-                BufferedWriter writer = new BufferedWriter(new FileWriter(inputFile.getName()));
-                writer.write(document.get());
-                writer.close();
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-        } else {
-            logger.warn(inputFile.getName() + " is not a java file. Will be copied as-is");
-        }
     }
 }
