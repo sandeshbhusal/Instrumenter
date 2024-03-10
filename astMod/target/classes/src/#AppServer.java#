@@ -4,21 +4,20 @@ import java.nio.file.Path;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import src.interfaces.Master;
 import src.interfaces.Runner;
 
-/* The definition of the Application server object.
- * this talks to the remote client and sends it commands,
- * and gets the computed values back.
- */
+import org.slf4j.*;
+
 public class AppServer extends UnicastRemoteObject implements Master {
     final static Logger logger = LoggerFactory.getLogger("MasterRMIServer");
     Path instrumented;
     Path ifInstrumented;
     Path reportInstrumented;
+
+    protected AppServer() throws RemoteException {
+        super();
+    }
 
     public AppServer(Path instrumentedDir, Path branchInstrumentedDir, Path reportInstrumentedDir)
             throws RemoteException {
@@ -27,10 +26,6 @@ public class AppServer extends UnicastRemoteObject implements Master {
         this.instrumented = instrumentedDir;
         this.ifInstrumented = branchInstrumentedDir;
         this.reportInstrumented = reportInstrumentedDir;
-    }
-
-    protected AppServer() throws RemoteException {
-        super();
     }
 
 

@@ -11,7 +11,6 @@ import org.eclipse.jdt.core.dom.ExpressionStatement;
 import org.eclipse.jdt.core.dom.IfStatement;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.MethodInvocation;
-import org.eclipse.jdt.core.dom.NumberLiteral;
 import org.eclipse.jdt.core.dom.SimpleName;
 import org.eclipse.jdt.core.dom.StringLiteral;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
@@ -157,7 +156,7 @@ public class InstrumentingVisitor extends ASTVisitor {
         // Check what values we can prune (local vars).
         varNames.retainAll(this.currentClassAttributes.instanceVariables);
         this.currentIfAttributes.instanceVariables = varNames;
-
+        
         return true;
     }
 
